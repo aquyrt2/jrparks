@@ -348,7 +348,6 @@ function install_jrebel() {
   return 0
 }
 
-install_jrebel $DEPLOY_DIR
 
 # This logic is intended to deploy the app as part of assemble
 # but many apps fail to deploy because they require additional
