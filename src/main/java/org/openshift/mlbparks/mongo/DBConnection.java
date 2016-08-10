@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -13,7 +14,13 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoDatabase;
+
+
 
 @Named
 @ApplicationScoped
@@ -42,24 +49,25 @@ public class DBConnection {
 		
 		int port = Integer.decode(mongoPort);
 		
-		Mongo mongo = null;
+		//mongoDB = mongo.getDB(mongoDBName);
+		
+
 		try {
-			mongo = new Mongo(mongoHost, port);
-			System.out.println("Connected to database");
-		} catch (UnknownHostException e) {
-			System.out.println("Couldn't connect to MongoDB: " + e.getMessage() + " :: " + e.getClass());
+		MongoCredential credential = MongoCredential.createCredential(mongoUser, mongoDBName, mongoPassword.toCharArray());
+		MongoClient mongoClient = new MongoClient(new ServerAddress(mongoHost, Integer.parseInt(mongoPort)), Arrays.asList(credential));
+		mongoDB = mongoClient.getDB(mongoDBName);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		mongoDB = mongo.getDB(mongoDBName);
-
-		if (mongoDB.authenticate(mongoUser, mongoPassword.toCharArray()) == false) {
+		/*if (mongoDB.authenticate(mongoUser, mongoPassword.toCharArray()) == false) {
 			System.out.println("Failed to authenticate DB ");
 			System.out.println("Using username: " + mongoUser + " and password: " + mongoPassword.toCharArray());
 			System.out.println("PW1 " + mongoPassword + " PW2: " + mongoPassword.toCharArray());
 		}
-
+*/
+		
 		this.initDatabase(mongoDB);
-
+		
 	}
 
 	public DB getDB() {

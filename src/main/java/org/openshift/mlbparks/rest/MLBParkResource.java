@@ -50,7 +50,7 @@ public class MLBParkResource {
 	@Produces("application/json")
 	public List<MLBPark> getAllParks() {
 		ArrayList<MLBPark> allParksList = new ArrayList<MLBPark>();
-
+		System.out.println("Hi..");
 		DBCollection mlbParks = this.getMLBParksCollection();
 		DBCursor cursor = mlbParks.find();
 		try {
